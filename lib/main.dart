@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
@@ -38,12 +39,366 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: '/',
         routes: {
-          '/': (context) => const ScrollToItemPosition(),
+          '/': (context) => const HomePage(),
         },
       ),
     );
   }
 }
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+  static const List<Widget> _widgetOptions = <Widget>[
+    Home(),
+    Text('Search Page', style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
+    Text('Profile Page', style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Flutter BottomNavigationBar Example'), backgroundColor: Colors.green),
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home', backgroundColor: Colors.green),
+            BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search', backgroundColor: Colors.yellow),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+              backgroundColor: Colors.blue,
+            ),
+          ],
+          type: BottomNavigationBarType.shifting,
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.black,
+          iconSize: 40,
+          onTap: _onItemTapped,
+          elevation: 5),
+    );
+  }
+}
+
+class Home extends StatelessWidget {
+  const Home({super.key});
+
+  void doNothing(BuildContext context) {}
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: ListView(
+        children: [
+          Slidable(
+            key: const ValueKey(0),
+            startActionPane: ActionPane(
+              motion: const ScrollMotion(),
+              dismissible: DismissiblePane(onDismissed: () {}),
+              children: [
+                SlidableAction(
+                  onPressed: doNothing,
+                  backgroundColor: const Color(0xFFFE4A49),
+                  foregroundColor: Colors.white,
+                  icon: Icons.delete,
+                  label: 'Delete',
+                ),
+                SlidableAction(
+                  onPressed: doNothing,
+                  backgroundColor: const Color(0xFF21B7CA),
+                  foregroundColor: Colors.white,
+                  icon: Icons.share,
+                  label: 'Share',
+                ),
+              ],
+            ),
+            endActionPane: ActionPane(
+              motion: const ScrollMotion(),
+              children: [
+                SlidableAction(
+                  flex: 2,
+                  onPressed: doNothing,
+                  backgroundColor: const Color(0xFF7BC043),
+                  foregroundColor: Colors.white,
+                  icon: Icons.archive,
+                  label: 'Archive',
+                ),
+                SlidableAction(
+                  onPressed: doNothing,
+                  backgroundColor: const Color(0xFF0392CF),
+                  foregroundColor: Colors.white,
+                  icon: Icons.save,
+                  label: 'Save',
+                ),
+              ],
+            ),
+            child: const ListTile(title: Text('Slide me')),
+          ),
+          Slidable(
+            key: const ValueKey(1),
+            startActionPane: ActionPane(
+              motion: const ScrollMotion(),
+              children: [
+                SlidableAction(
+                  onPressed: doNothing,
+                  backgroundColor: const Color(0xFFFE4A49),
+                  foregroundColor: Colors.white,
+                  icon: Icons.delete,
+                  label: 'Delete',
+                ),
+                SlidableAction(
+                  onPressed: doNothing,
+                  backgroundColor: const Color(0xFF21B7CA),
+                  foregroundColor: Colors.white,
+                  icon: Icons.share,
+                  label: 'Share',
+                ),
+              ],
+            ),
+            endActionPane: ActionPane(
+              motion: const ScrollMotion(),
+              dismissible: DismissiblePane(onDismissed: () {}),
+              children: [
+                SlidableAction(
+                  flex: 2,
+                  onPressed: doNothing,
+                  backgroundColor: const Color(0xFF7BC043),
+                  foregroundColor: Colors.white,
+                  icon: Icons.archive,
+                  label: 'Archive',
+                ),
+                SlidableAction(
+                  onPressed: doNothing,
+                  backgroundColor: const Color(0xFF0392CF),
+                  foregroundColor: Colors.white,
+                  icon: Icons.save,
+                  label: 'Save',
+                ),
+              ],
+            ),
+            child: const ListTile(title: Text('Slide me')),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// class Home extends StatefulWidget {
+//   const Home({
+//     Key? key,
+//   }) : super(key: key);
+//
+//   @override
+//   State<Home> createState() => _HomeState();
+// }
+//
+// class _HomeState extends State<Home> {
+//   // This is used to monitor the item index in the list, and later used to closeup or leave open the slide.
+//   int resetSlideIndex = 0;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text("Class List"),
+//       ),
+//       body: ListView.separated(
+//         itemCount: _classList.length,
+//         padding: const EdgeInsets.symmetric(
+//           horizontal: 16,
+//           vertical: 20,
+//         ),
+//         itemBuilder: (context, index) {
+//           Map<String, dynamic> student = _classList[index];
+//           return GestureDetector(
+//             onLongPressDown: (val) {
+//               setState(() {
+//                 resetSlideIndex = index;
+//               });
+//             },
+//             child: _listItem(
+//               context: context,
+//               student: student,
+//               index: index,
+//               resetSlide: index == resetSlideIndex ? false : true,
+//             ),
+//           );
+//         },
+//         separatorBuilder: (context, index) => const SizedBox(height: 10),
+//       ),
+//     );
+//   }
+//
+//   Slideable _listItem({
+//     required BuildContext context,
+//     required Map<String, dynamic> student,
+//     required int index,
+//     required bool resetSlide,
+//   }) {
+//     return Slideable(
+//       resetSlide: resetSlide,
+//       actions: <Widget>[
+//         IconSlideAction(
+//           icon: Icons.close,
+//           caption: 'Delete',
+//           color: Theme.of(context).accentColor,
+//           onTap: () {
+//             setState(() {
+//               todos.removeAt(i);
+//             });
+//           },
+//         )
+//       ],
+//       items: <ActionItems>[
+//         ActionItems(
+//           icon: const Icon(
+//             Icons.thumb_up,
+//             color: Colors.blue,
+//           ),
+//           onPress: () => _likeUser(student["name"]),
+//           backgroudColor: Colors.transparent,
+//         ),
+//         ActionItems(
+//           icon: const Icon(
+//             Icons.delete,
+//             color: Colors.red,
+//           ),
+//           onPress: () => _deleteUser(student["name"]),
+//           backgroudColor: Colors.transparent,
+//         ),
+//       ],
+//       child: Container(
+//         padding: const EdgeInsets.symmetric(
+//           horizontal: 10,
+//           vertical: 12,
+//         ),
+//         decoration: BoxDecoration(
+//           color: const Color.fromARGB(255, 214, 214, 214),
+//           border: Border.all(
+//             width: 1,
+//             color: const Color.fromARGB(124, 158, 158, 158),
+//           ),
+//           borderRadius: BorderRadius.circular(10),
+//         ),
+//         child: Row(
+//           crossAxisAlignment: CrossAxisAlignment.center,
+//           children: [
+//             Container(
+//               height: 50,
+//               width: 50,
+//               decoration: BoxDecoration(
+//                 color: Colors.grey[350],
+//                 shape: BoxShape.circle,
+//                 border: Border.all(
+//                   width: 1,
+//                   color: Colors.white,
+//                 ),
+//               ),
+//               child: ClipRRect(
+//                 borderRadius: BorderRadius.circular(100),
+//                 child: Image.network(
+//                   student["img"],
+//                   fit: BoxFit.cover,
+//                 ),
+//               ),
+//             ),
+//             const SizedBox(
+//               width: 5,
+//             ),
+//             Expanded(
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   const Text(
+//                     "Name",
+//                     style: TextStyle(
+//                       color: Colors.grey,
+//                       fontSize: 12,
+//                       fontWeight: FontWeight.w800,
+//                     ),
+//                   ),
+//                   const SizedBox(height: 2),
+//                   Text(
+//                     student["name"],
+//                     style: const TextStyle(
+//                       fontWeight: FontWeight.w500,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             Text(
+//               "#${index + 1}",
+//               style: const TextStyle(
+//                 fontWeight: FontWeight.w500,
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+//
+//   _deleteUser(user) {
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       SnackBar(
+//         content: Text("$user, will be deleted."),
+//         backgroundColor: Colors.grey[450],
+//       ),
+//     );
+//   }
+//
+//   _likeUser(user) {
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       SnackBar(
+//         content: Text("You gave $user a thumbs up, pretty cool 🥰"),
+//         backgroundColor: Colors.grey[450],
+//       ),
+//     );
+//   }
+//
+//   final List<Map<String, dynamic>> _classList = [
+//     {
+//       "name": "Ikwegbu George",
+//       "img": "https://images.pexels.com/photos/2379429/pexels-photo-2379429.jpeg?auto=compress&cs=tinysrgb&w=1600",
+//     },
+//     {
+//       "name": "Phoebe Pelumi",
+//       "img":
+//           "https://images.pexels.com/photos/3986672/pexels-photo-3986672.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
+//     },
+//     {
+//       "name": "James Mike",
+//       "img":
+//           "https://images.pexels.com/photos/11828983/pexels-photo-11828983.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
+//     },
+//     {
+//       "name": "Abigail Ezinne",
+//       "img":
+//           "https://images.pexels.com/photos/3030252/pexels-photo-3030252.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
+//     },
+//     {
+//       "name": "Chioma Chinedu",
+//       "img": "https://images.pexels.com/photos/4491630/pexels-photo-4491630.jpeg?auto=compress&cs=tinysrgb&w=1600",
+//     },
+//   ];
+// }
 
 const numberOfItems = 5001;
 const minItemHeight = 20.0;
